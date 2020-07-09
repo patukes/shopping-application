@@ -21,6 +21,11 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String usertype;
+    private int age;
+
+    //mappedBy: the class that should annotate, the second class will ignore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private Address address;
 
     public int getUserid() {
         return userid;
@@ -58,10 +63,7 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    private int age;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-    private Address address;
 
     public String getEmail() {
         return email;
