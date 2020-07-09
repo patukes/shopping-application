@@ -21,6 +21,10 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String usertype;
+    private int age;
+// the mapped parameter indicates that the table should only be created by the user
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private Address address;
 
     public int getUserid() {
         return userid;
@@ -30,7 +34,7 @@ public class User implements Serializable {
         this.userid = userid;
     }
 
-    public String getUsertype() {
+    public String getUsertype() { 
         return usertype;
     }
 
@@ -58,10 +62,7 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    private int age;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-    private Address address;
 
     public String getEmail() {
         return email;
