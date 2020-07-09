@@ -21,6 +21,14 @@ public class Bufcart implements Serializable {
     @Column(nullable = true)
     private int orderId;
 
+    private String email;
+
+    private Date dateAdded;
+
+    private int quantity;
+    private double price;
+    private int productId;
+
     public int getOrderId() {
         return orderId;
     }
@@ -36,13 +44,7 @@ public class Bufcart implements Serializable {
                 + ", productname=" + productname + "]";
     }
 
-    private String email;
 
-    private Date dateAdded;
-
-    private int quantity;
-    private double price;
-    private int productId;
 
     private String productname;
 
