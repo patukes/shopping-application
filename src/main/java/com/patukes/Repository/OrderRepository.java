@@ -1,16 +1,18 @@
 package com.patukes.Repository;
 
-import com.patukes.model.Address;
-import com.patukes.model.User;
+import java.util.List;
+
+import com.patukes.model.PlaceOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
 @Repository
 @Transactional
-public interface AddressRepository extends JpaRepository<Address, Long> {
+public interface OrderRepository extends JpaRepository<PlaceOrder, Long> {
 
-    Address findByUser(User user);
+    PlaceOrder findByOrderId(int orderId);
+    List<PlaceOrder> findAll();
+
 }
