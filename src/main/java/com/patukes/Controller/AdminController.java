@@ -7,6 +7,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.patukes.Response.ServerResp;
+import com.patukes.Response.order;
+import com.patukes.Response.prodResp;
+import com.patukes.Response.viewOrdResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +33,7 @@ import com.patukes.Repository.CartRepository;
 import com.patukes.Repository.OrderRepository;
 import com.patukes.Repository.ProductRepository;
 import com.patukes.Repository.UserRepository;
-import com.patukes.Repository.order;
-import com.patukes.Repository.prodResp;
-import com.patukes.Repository.serverResp;
-import com.patukes.Repository.viewOrdResp;
+
 import com.patukes.util.Validator;
 import com.patukes.util.jwtUtil;
 
@@ -57,7 +58,7 @@ public class AdminController {
     private jwtUtil jwtutil;
 
     @PostMapping("/verify")
-    public ResponseEntity<serverResp> verifyUser(@Valid @RequestBody HashMap<String, String> credential) {
+    public ResponseEntity<ServerResp> verifyUser(@Valid @RequestBody HashMap<String, String> credential) {
         String email = "";
         String password = "";
         if (credential.containsKey(WebConstants.USER_EMAIL)) {
@@ -67,7 +68,7 @@ public class AdminController {
             password = credential.get(WebConstants.USER_PASSWORD);
         }
         User loggedUser = userRepo.findByEmailAndPasswordAndUsertype(email, password, WebConstants.USER_ADMIN_ROLE);
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (loggedUser != null) {
             String jwtToken = jwtutil.createToken(email, password, WebConstants.USER_ADMIN_ROLE);
             resp.setStatus(ResponseCode.SUCCESS_CODE);
@@ -77,7 +78,7 @@ public class AdminController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.OK);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.OK);
     }
 
     @PostMapping("/addProduct")
@@ -141,7 +142,7 @@ public class AdminController {
     }
 
     @PostMapping("/updateProducts")
-    public ResponseEntity<serverResp> updateProducts(
+    public ResponseEntity<ServerResp> updateProducts(
             @RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN,
             @RequestParam(name = WebConstants.PROD_FILE, required = false) MultipartFile prodImage,
             @RequestParam(name = WebConstants.PROD_DESC) String description,
@@ -149,7 +150,7 @@ public class AdminController {
             @RequestParam(name = WebConstants.PROD_NAME) String productname,
             @RequestParam(name = WebConstants.PROD_QUANITY) String quantity,
             @RequestParam(name = WebConstants.PROD_ID) String productid) throws IOException {
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (Validator.isStringEmpty(productname) || Validator.isStringEmpty(description)
                 || Validator.isStringEmpty(price) || Validator.isStringEmpty(quantity)) {
             resp.setStatus(ResponseCode.BAD_REQUEST_CODE);
@@ -179,7 +180,7 @@ public class AdminController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/delProduct")
@@ -242,12 +243,12 @@ public class AdminController {
     }
 
     @PostMapping("/updateOrder")
-    public ResponseEntity<serverResp> updateOrders(
+    public ResponseEntity<ServerResp> updateOrders(
             @RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN,
             @RequestParam(name = WebConstants.ORD_ID) String orderId,
             @RequestParam(name = WebConstants.ORD_STATUS) String orderStatus) throws IOException {
 
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (Validator.isStringEmpty(orderId) || Validator.isStringEmpty(orderStatus)) {
             resp.setStatus(ResponseCode.BAD_REQUEST_CODE);
             resp.setMessage(ResponseCode.BAD_REQUEST_MESSAGE);
@@ -268,6 +269,6 @@ public class AdminController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.ACCEPTED);
     }
 }

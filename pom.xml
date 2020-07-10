@@ -63,6 +63,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.github.wnameless.spring</groupId>
+			<artifactId>spring-security-jjwt</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 
