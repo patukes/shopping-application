@@ -1,20 +1,22 @@
 package com.patukes.Controller;
 
 import com.patukes.Repository.*;
-import com.patukes.Response.ServerResp;
-import com.patukes.Response.UserResp;
+import com.patukes.Response.*;
 import com.patukes.constants.ResponseCode;
-import com.patukes.model.User;
+import com.patukes.constants.WebConstants;
+import com.patukes.model.*;
 import com.patukes.util.Validator;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
+import com.patukes.util.jwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +57,9 @@ public class UserController {
     private jwtUtil jwtutil;
 
     @PostMapping("/signup")
-    public ResponseEntity<serverResp> addUser(@Valid @RequestBody User user) {
+    public ResponseEntity<ServerResp> addUser(@Valid @RequestBody User user) {
 
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         try {
             if (Validator.isUserEmpty(user)) {
                 resp.setStatus(ResponseCode.BAD_REQUEST_CODE);
@@ -75,11 +77,11 @@ public class UserController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(e.getMessage());
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<serverResp> verifyUser(@Valid @RequestBody Map<String, String> credential) {
+    public ResponseEntity<ServerResp> verifyUser(@Valid @RequestBody Map<String, String> credential) {
 
         String email = "";
         String password = "";
@@ -90,7 +92,7 @@ public class UserController {
             password = credential.get(WebConstants.USER_PASSWORD);
         }
         User loggedUser = userRepo.findByEmailAndPasswordAndUsertype(email, password, WebConstants.USER_CUST_ROLE);
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (loggedUser != null) {
             String jwtToken = jwtutil.createToken(email, password, WebConstants.USER_CUST_ROLE);
             resp.setStatus(ResponseCode.SUCCESS_CODE);
@@ -100,13 +102,13 @@ public class UserController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.OK);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.OK);
     }
 
     @PostMapping("/addAddress")
-    public ResponseEntity<userResp> addAddress(@Valid @RequestBody Address address,
+    public ResponseEntity<UserResp> addAddress(@Valid @RequestBody Address address,
                                                @RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN) {
-        userResp resp = new userResp();
+        UserResp resp = new UserResp();
         if (Validator.isAddressEmpty(address)) {
             resp.setStatus(ResponseCode.BAD_REQUEST_CODE);
             resp.setMessage(ResponseCode.BAD_REQUEST_MESSAGE);
@@ -130,7 +132,7 @@ public class UserController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<userResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<UserResp>(resp, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/getAddress")
@@ -191,10 +193,10 @@ public class UserController {
     }
 
     @GetMapping("/addToCart")
-    public ResponseEntity<serverResp> addToCart(@RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN,
+    public ResponseEntity<ServerResp> addToCart(@RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN,
                                                 @RequestParam(WebConstants.PROD_ID) String productId) throws IOException {
 
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (!Validator.isStringEmpty(AUTH_TOKEN) && jwtutil.checkToken(AUTH_TOKEN) != null) {
             try {
                 User loggedUser = jwtutil.checkToken(AUTH_TOKEN);
@@ -222,7 +224,7 @@ public class UserController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/viewCart")
@@ -306,10 +308,10 @@ public class UserController {
     }
 
     @GetMapping("/placeOrder")
-    public ResponseEntity<serverResp> placeOrder(@RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN)
+    public ResponseEntity<ServerResp> placeOrder(@RequestHeader(name = WebConstants.USER_AUTH_TOKEN) String AUTH_TOKEN)
             throws IOException {
 
-        serverResp resp = new serverResp();
+        ServerResp resp = new ServerResp();
         if (!Validator.isStringEmpty(AUTH_TOKEN) && jwtutil.checkToken(AUTH_TOKEN) != null) {
             try {
                 User loggedUser = jwtutil.checkToken(AUTH_TOKEN);
@@ -342,6 +344,6 @@ public class UserController {
             resp.setStatus(ResponseCode.FAILURE_CODE);
             resp.setMessage(ResponseCode.FAILURE_MESSAGE);
         }
-        return new ResponseEntity<serverResp>(resp, HttpStatus.ACCEPTED);
+        return new ResponseEntity<ServerResp>(resp, HttpStatus.ACCEPTED);
     }
 }
