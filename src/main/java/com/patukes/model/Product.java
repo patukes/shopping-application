@@ -21,7 +21,7 @@ public class Product implements Serializable {
     private String productname;
     private double price;
     private int quantity;
-    @Lob
+    @Lob  //Lob means the data should be stored as binary data
     private byte[] productimage;
 
     public int getProductid() {

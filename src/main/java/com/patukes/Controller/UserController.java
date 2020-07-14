@@ -30,7 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
+//@CrossOrigin: It prevents the JavaScript code (i.e the browser) from producing or consuming
+// the requests against different origin, HERE, WE DEFINE ORIGIN TO BE ALL
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")

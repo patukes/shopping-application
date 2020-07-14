@@ -22,7 +22,8 @@ public class User implements Serializable {
     private String password;
     private String usertype;
     private int age;
-// the mapped parameter indicates that the table should only be created by the user
+// the mapped parameter indicates that the table (just a column in this case, in the address table)
+// should only be created by the user
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private Address address;
 
