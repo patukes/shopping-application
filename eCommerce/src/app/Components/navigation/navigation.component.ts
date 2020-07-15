@@ -11,7 +11,15 @@ export class NavigationComponent implements OnInit {
   private loggedType: string;
   constructor(private auth: ApiService, private route: Router) {
 
-    
+    if (this.auth.getAuthType() == null) {
+      this.loggedType = "home";
+    } else {
+      if (this.auth.getAuthType() == "customer") {
+        this.loggedType = "customer";
+      } else if (this.auth.getAuthType() == "admin") {
+        this.loggedType = "admin";
+      }
+    }
   }
 
   ngOnInit() {
@@ -19,9 +27,9 @@ export class NavigationComponent implements OnInit {
 
   }
   logout() {
-    //this.loggedType = "home";
-    //this.auth.removeToken();
-    //this.route.navigate(['/login']);
+    this.loggedType = "home";
+    this.auth.removeToken();
+    this.route.navigate(['/login']);
   }
 
 }
